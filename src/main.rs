@@ -8,6 +8,9 @@ fn main() {
     ONE BATTLE AFTER ANOTHER The mood music has changed dramatically since Trump declared in a Truth Social post in April 2025 that his tariffs would make China realise that the *days of ripping off* the United States were over. Those levies prompted Beijing to restrict exports of rare earths, brutally exposing the West's dependency on elements vital to the manufacturing of everything from electric cars to weapons, and eventually led to Trump and Xi's ‌fragile truce. Since then, Trump has faced countless other battles: capturing Venezuela's leader, threatening to annex fellow NATO member Greenland and waging a war on Iran that has plunged the Middle East into chaos and stoked a global energy crisis. More than 60% of Americans disapprove of his Iran war, according to a Reuters/Ipsos survey last month. Now, Trump wants China to convince Tehran to make a deal with Washington to end the conflict. China maintains ties with Iran and remains a major consumer of its oil exports. Matt Pottinger, who served as deputy national security advisor during Trump's first term, told a forum in Taipei last week that while China would like to see an outcome that weakens American power it is not immune to the economic cost of a protracted conflict. But Beijing will want something in return, and top of Xi's agenda is Taiwan, the democratically governed island claimed by China. While some fear a bargain that could embolden China to take Taiwan by force, even a nuanced change in Washington's wording would raise anxiety about the commitment of Taipei's most important backer that would reverberate across other U.S. allies in Asia. Wu Xinbo, a professor at Fudan University in Shanghai who serves on the policy advisory board of China's foreign ministry, said Trump should make clear that he *won't support independence or take actions that encourage a separatist political agenda*.
     'SUPERFICIAL CEASEFIRE' China also wants the Trump administration to commit to not taking future retaliatory trade action such as technology export controls, and to roll back existing controls on chipmaking equipment and advanced memory chips, people briefed on the talks said. And since last October, Beijing has been expanding its own economic leverage, such as enacting laws to punish foreign entities that shift supply chains away from China and tightening its rare earth licensing regime. A majority of Americans (53 percent) now say the United States should undertake friendly cooperation and engagement with China, up from 40 percent in 2024, according to a survey by the Chicago Council on Global Affairs published in October. So just keeping relations on an even keel and extending the trade war truce could be enough for Trump to claim a win. That leaves the main outcome likely to be *a superficial ceasefire that is largely to China's advantage,* said Scott Kennedy of the Center for Strategic and International Studies think tank in Washington.*";
 
+    // Create an empty string to contain the "linked" text.
+    let mut linked_text = String::new();
+
     // Create Regex pattern to match words that start with a capital letter
     let capital_detect = Regex::new(r"^[A-Z]").unwrap();
 
@@ -34,16 +37,332 @@ fn main() {
         let y = capital_detect.is_match(&index[2]);
         let z = capital_detect.is_match(&index[3]);
 
+        // Create vectors to hold variants of the linked items to prevent them from being linked
+        // again if they appear again in other written contexts
+        let mut outer_comma = Vec::new();
+        let mut comma_vec = Vec::new();
+        let mut outer_strip_comma = Vec::new();
+        let mut strip_comma_vec = Vec::new();
+        let mut outer_period = Vec::new();
+        let mut period_vec = Vec::new();
+        let mut outer_strip_period = Vec::new();
+        let mut strip_period_vec = Vec::new();
+        let mut outer_possessive = Vec::new();
+        let mut possessive_vec = Vec::new();
+        let mut outer_strip_possessive = Vec::new();
+        let mut strip_possessive_vec = Vec::new();
+
         // If all 4 slots contain capital words...
         if w & x & y & z {
+            // Create an empty vector to hold the values to compare to
+            let mut tester = Vec::new();
+            // Push the values in the window to the testing vector
+            let slice: Vec<String> = vec![
+                index[0].to_string(),
+                index[1].to_string(),
+                index[2].to_string(),
+                index[3].to_string(),
+            ];
+            tester.push(slice.clone());
+
+            // If this has already been linked, move the window to skip it
+            if previously_linked.contains(&tester) {
+                chunks.next();
+                chunks.next();
+                chunks.next();
+            // Otherwise...
+            } else {
+                // For each 
+                for (i, _content) in slice.clone().into_iter().enumerate() {
+                    // Add the opening linking brackets, [[, to the first word
+                    if i == 0 {
+                        let linked_word = format!("[[{}", index[i]);
+                        let linked_line = index[i].replace(index[i], &linked_word);
+                        linked_text.push_str(&(linked_line + " "));
+                    // Add the closing linking brackets, ]], to the last word
+                    } else if i == slice.len() - 1 {
+                        // If there's a possessive, add the closing linking brackets before the 's
+                        if index[i].contains("'s") {
+                            let stripped_word = index[i].replace("'s", "");
+                            let linked_wordi = format!("{}]]'s", stripped_word);
+                            let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
+                            linked_text.push_str(&(linked_linei + " "));
+                        // If there's a comma, add the closing linking brackets before the comma
+                        } else if index[i].contains(",") {
+                            let stripped_word = index[i].replace(",", "");
+                            let linked_wordi = format!("{}]],", stripped_word);
+                            let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
+                            linked_text.push_str(&(linked_linei + " "));
+                        // If there's a period, add the closing linking brackets before the period
+                        } else if index[i].contains(".") {
+                            let stripped_word = index[i].replace(".", "");
+                            let linked_wordi = format!("{}]].", stripped_word);
+                            let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
+                            linked_text.push_str(&(linked_linei + " "));
+                        // Otherwise, link the last word normally
+                        } else {
+                            let linked_wordi = format!("{}]]", index[i]);
+                            let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
+                            linked_text.push_str(&(linked_linei + " "));
+                        }
+                    // Otherwise don't add any linking brackets to the word
+                    } else {
+                        let linked_word = format!("{}", index[i]);
+                        let linked_line = index[i].replace(index[i], &linked_word);
+                        linked_text.push_str(&(linked_line + " "));
+                    }
+
+                    let strip_comma = index[i].replace(",", "");
+                    strip_comma_vec.push(strip_comma);
+                    let strip_period = index[i].replace(".", "");
+                    strip_period_vec.push(strip_period);
+                    let strip_possessive = index[i].replace("'s", "");
+                    strip_possessive_vec.push(strip_possessive);
+                }
+
+                // Add the tester contents to the previously linked items
+                previously_linked.insert(tester);
+                // Move the window past all the words in this window
+                chunks.next();
+                chunks.next();
+                chunks.next();
+
+                let linked_comma = format!("{} {},", index[0], index[1]);
+                comma_vec.push(linked_comma);
+                outer_comma.push(comma_vec);
+
+                let linked_period = format!("{} {}.", index[0], index[1]);
+                period_vec.push(linked_period);
+                outer_period.push(period_vec);
+
+                let linked_possessive = format!("{} {}'s", index[0], index[1]);
+                possessive_vec.push(linked_possessive);
+                outer_possessive.push(possessive_vec);
+
+                outer_strip_comma.push(strip_comma_vec);
+                outer_strip_period.push(strip_period_vec);
+                outer_strip_possessive.push(strip_possessive_vec);
+
+                previously_linked.insert(outer_comma);
+                previously_linked.insert(outer_strip_comma);
+                previously_linked.insert(outer_period);
+                previously_linked.insert(outer_strip_period);
+                previously_linked.insert(outer_possessive);
+                previously_linked.insert(outer_strip_possessive);
+
+            }
         // If the first 3 slots contain capital words...
         } else if w & x & y {
+            let mut tester = Vec::new();
+            let slice: Vec<String> = vec![
+                index[0].to_string(),
+                index[1].to_string(),
+                index[2].to_string(),
+            ];
+            tester.push(slice.clone());
+            if previously_linked.contains(&tester) {
+                chunks.next();
+                chunks.next();
+            } else {
+                for (i, _content) in slice.clone().into_iter().enumerate() {
+                    if i == 0 {
+                        let linked_word = format!("[[{}", index[i]);
+                        let linked_line = index[i].replace(index[i], &linked_word);
+                        linked_text.push_str(&(linked_line + " "));
+                    } else if i == slice.len() - 1 {
+                        if index[i].contains("'s") {
+                            let stripped_word = index[i].replace("'s", "");
+                            let linked_wordi = format!("{}]]'s", stripped_word);
+                            let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
+                            linked_text.push_str(&(linked_linei + " "));
+                        } else if index[i].contains(",") {
+                            let stripped_word = index[i].replace(",", "");
+                            let linked_wordi = format!("{}]],", stripped_word);
+                            let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
+                            linked_text.push_str(&(linked_linei + " "));
+                        } else {
+                            let linked_wordi = format!("{}]]", index[i]);
+                            let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
+                            linked_text.push_str(&(linked_linei + " "));
+                        }
+                    } else {
+                        let linked_word = format!("{}", index[i]);
+                        let linked_line = index[i].replace(index[i], &linked_word);
+                        linked_text.push_str(&(linked_line + " "));
+                    }
+                    let strip_comma = index[i].replace(",", "");
+                    strip_comma_vec.push(strip_comma);
+                    let strip_period = index[i].replace(".", "");
+                    strip_period_vec.push(strip_period);
+                    let strip_possessive = index[i].replace("'s", "");
+                    strip_possessive_vec.push(strip_possessive);
+                }
+                previously_linked.insert(tester);
+                chunks.next();
+                chunks.next();
+
+                let linked_comma = format!("{} {},", index[0], index[1]);
+                comma_vec.push(linked_comma);
+                outer_comma.push(comma_vec);
+
+                let linked_period = format!("{} {}.", index[0], index[1]);
+                period_vec.push(linked_period);
+                outer_period.push(period_vec);
+
+                let linked_possessive = format!("{} {}'s", index[0], index[1]);
+                possessive_vec.push(linked_possessive);
+                outer_possessive.push(possessive_vec);
+
+                outer_strip_comma.push(strip_comma_vec);
+                outer_strip_period.push(strip_period_vec);
+                outer_strip_possessive.push(strip_possessive_vec);
+
+                previously_linked.insert(outer_comma);
+                previously_linked.insert(outer_strip_comma);
+                previously_linked.insert(outer_period);
+                previously_linked.insert(outer_strip_period);
+                previously_linked.insert(outer_possessive);
+                previously_linked.insert(outer_strip_possessive);
+            }
         // If the first 2 slots contain capital words...
         } else if w & x {
+            let mut tester = Vec::new();
+            let slice: Vec<String> = vec![index[0].to_string(), index[1].to_string()];
+            tester.push(slice.clone());
+            if previously_linked.contains(&tester) {
+                chunks.next();
+            } else {
+
+                for (i, _content) in slice.clone().into_iter().enumerate() {
+                    if index[i].ends_with(",") {
+                        chunks.next();
+                    } else if index[i].ends_with(".") {
+                        chunks.next();
+                    } else if i == 0 {
+                        let linked_word = format!("[[{}", index[i]);
+                        let linked_line = index[i].replace(index[i], &linked_word);
+                        linked_text.push_str(&(linked_line + " "));
+                    } else if i == slice.len() - 1 {
+                        if index[i].contains("'s") {
+                            let stripped_word = index[i].replace("'s", "");
+                            let linked_wordi = format!("{}]]'s", stripped_word);
+                            let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
+                            linked_text.push_str(&(linked_linei + " "));
+                        } else if index[i].contains(",") {
+                            let stripped_word = index[i].replace(",", "");
+                            let linked_wordi = format!("{}]],", stripped_word);
+                            let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
+                            linked_text.push_str(&(linked_linei + " "));
+                        } else {
+                            let linked_wordi = format!("{}]]", index[i]);
+                            let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
+                            linked_text.push_str(&(linked_linei + " "));
+                        }
+                    } else {
+                        let linked_word = format!("{}", index[i]);
+                        let linked_line = index[i].replace(index[i], &linked_word);
+                        linked_text.push_str(&(linked_line + " "));
+                    }
+
+                    let strip_comma = index[i].replace(",", "");
+                    strip_comma_vec.push(strip_comma);
+                    let strip_period = index[i].replace(".", "");
+                    strip_period_vec.push(strip_period);
+                    let strip_possessive = index[i].replace("'s", "");
+                    strip_possessive_vec.push(strip_possessive);
+                }
+
+                chunks.next();
+
+                let linked_comma = format!("{} {},", index[0], index[1]);
+                comma_vec.push(linked_comma);
+                outer_comma.push(comma_vec);
+
+                let linked_period = format!("{} {}.", index[0], index[1]);
+                period_vec.push(linked_period);
+                outer_period.push(period_vec);
+
+                let linked_possessive = format!("{} {}'s", index[0], index[1]);
+                possessive_vec.push(linked_possessive);
+                outer_possessive.push(possessive_vec);
+
+                outer_strip_comma.push(strip_comma_vec);
+                outer_strip_period.push(strip_period_vec);
+                outer_strip_possessive.push(strip_possessive_vec);
+
+                previously_linked.insert(outer_comma);
+                previously_linked.insert(outer_strip_comma);
+                previously_linked.insert(outer_period);
+                previously_linked.insert(outer_strip_period);
+                previously_linked.insert(outer_possessive);
+                previously_linked.insert(outer_strip_possessive);
+            }
         // If only the first slots contains a capital word...
         } else if w {
+            let mut tester = Vec::new();
+            let slice: Vec<String> = vec![index[0].to_string()];
+            tester.push(slice);
+            if previously_linked.contains(&tester) {
+                chunks.next();
+            } else {
+
+                if index[0].contains("'s") {
+                    let stripped_word = index[0].replace("'s", "");
+                    let linked_word0 = format!("[[{}]]'s", stripped_word);
+                    let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
+                    linked_text.push_str(&(linked_line0 + " "));
+                } else if index[0].contains(",") {
+                    let stripped_word = index[0].replace(",", "");
+                    let linked_word0 = format!("[[{}]],", stripped_word);
+                    let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
+                    linked_text.push_str(&(linked_line0 + " "));
+                } else {
+                    let linked_word0 = format!("[[{}]]", index[0]);
+                    let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
+                    linked_text.push_str(&(linked_line0 + " "));
+                }
+
+                let linked_comma = format!("{},", index[0]);
+                comma_vec.push(linked_comma);
+                outer_comma.push(comma_vec);
+
+                let strip_comma = index[0].replace(",", "");
+                let linked_strip_comma = format!("{}", strip_comma);
+                strip_comma_vec.push(linked_strip_comma);
+                outer_strip_comma.push(strip_comma_vec);
+
+                let linked_period = format!("{}.", index[0]);
+                period_vec.push(linked_period);
+                outer_period.push(period_vec);
+
+                let strip_period = index[0].replace(".", "");
+                let linked_strip_period = format!("{}", strip_period);
+                strip_period_vec.push(linked_strip_period);
+                outer_strip_period.push(strip_period_vec);
+
+                let linked_possessive = format!("{}'s", index[0]);
+                possessive_vec.push(linked_possessive);
+                outer_possessive.push(possessive_vec);
+
+                let strip_possessive = index[0].replace("'s", "");
+                let linked_strip_possessive = format!("{}", strip_possessive);
+                strip_possessive_vec.push(linked_strip_possessive);
+                outer_strip_possessive.push(strip_possessive_vec);
+
+                previously_linked.insert(tester);
+                previously_linked.insert(outer_comma);
+                previously_linked.insert(outer_strip_comma);
+                previously_linked.insert(outer_period);
+                previously_linked.insert(outer_strip_period);
+                previously_linked.insert(outer_possessive);
+                previously_linked.insert(outer_strip_possessive);
+            }
         // If no slots contain capital words...
-        } else {}
+        } else {
+            linked_text.push_str(&(index[0].to_owned() + " "));
+        }
     }
+
+    println!("{}", linked_text);
 
 }
