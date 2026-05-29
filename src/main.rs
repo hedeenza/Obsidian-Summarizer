@@ -53,7 +53,7 @@ fn main() {
         let mut strip_possessive_vec = Vec::new();
 
         // If all 4 slots contain capital words...
-        if w & x & y & z {
+        if w & x & y & z | w & (index[1] == "of") & y & z | w & x & (index[2] == "of") & z {
             // Create an empty vector to hold the values to compare to
             let mut tester = Vec::new();
             // Push the values in the window to the testing vector
@@ -152,7 +152,7 @@ fn main() {
 
             }
         // If the first 3 slots contain capital words...
-        } else if w & x & y {
+        } else if w & x & y | w & (index[1] == "of") & y | w & (index[1] == "the") & y | w & (index[1] == "for") & y {
             let mut tester = Vec::new();
             let slice: Vec<String> = vec![
                 index[0].to_string(),
@@ -234,11 +234,7 @@ fn main() {
             } else {
 
                 for (i, _content) in slice.clone().into_iter().enumerate() {
-                    if index[i].ends_with(",") {
-                        chunks.next();
-                    } else if index[i].ends_with(".") {
-                        chunks.next();
-                    } else if i == 0 {
+                    if i == 0 {
                         let linked_word = format!("[[{}", index[i]);
                         let linked_line = index[i].replace(index[i], &linked_word);
                         linked_text.push_str(&(linked_line + " "));
@@ -364,11 +360,13 @@ fn main() {
     }
 
     // Clean out the "stop words"
-    // for stop_word in STOP_WORDS {
-    //     let linked_stop = format!("[[{}]]", stop_word);
-    //     let cleaned_text = linked_text.replace(&linked_stop, stop_word);
-    //     linked_text = cleaned_text;
-    // }
+    for stop_word in STOP_WORDS {
+        let linked_stop = format!("[[{}]]", stop_word);
+        let cleaned_text = linked_text.replace(&linked_stop, stop_word);
+        linked_text = cleaned_text;
+    }
+
+    println!("{}\n", text);
 
     println!("{}", linked_text);
 
