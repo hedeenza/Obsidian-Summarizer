@@ -67,6 +67,10 @@ fn main() {
 
             // If this has already been linked, move the window to skip it
             if previously_linked.contains(&tester) {
+                for word in slice {
+                    linked_text.push_str(&word);
+                    linked_text.push(' ');
+                }
                 chunks.next();
                 chunks.next();
                 chunks.next();
@@ -161,6 +165,10 @@ fn main() {
             ];
             tester.push(slice.clone());
             if previously_linked.contains(&tester) {
+                for word in slice {
+                    linked_text.push_str(&word);
+                    linked_text.push(' ');
+                }
                 chunks.next();
                 chunks.next();
             } else {
@@ -230,6 +238,10 @@ fn main() {
             let slice: Vec<String> = vec![index[0].to_string(), index[1].to_string()];
             tester.push(slice.clone());
             if previously_linked.contains(&tester) {
+                for word in slice {
+                    linked_text.push_str(&word);
+                    linked_text.push(' ');
+                }
                 chunks.next();
             } else {
 
@@ -297,8 +309,13 @@ fn main() {
         } else if w {
             let mut tester = Vec::new();
             let slice: Vec<String> = vec![index[0].to_string()];
-            tester.push(slice);
+            tester.push(slice.clone());
+
             if previously_linked.contains(&tester) {
+                for word in slice {
+                    linked_text.push_str(&word);
+                    linked_text.push(' ');
+                }
                 chunks.next();
             } else {
 
