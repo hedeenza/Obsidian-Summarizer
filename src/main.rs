@@ -8,6 +8,10 @@ struct CLI {
     /// Input text file to summarize
     #[arg(short, long)]
     input: String,
+    
+    /// Number of sentences in Summary
+    #[arg(short, long)]
+    summary_length: u8,
 }
 
 
@@ -42,11 +46,26 @@ fn main() {
     // Run the Python Summary Script
     let mut run_python = Command::new(python)
         .arg("summary.py")
+        .arg(&args.input)
+        .arg(args.summary_length.to_string())
         .spawn()
         .expect("Could not run Python summary script");
 
     // Wait for the Python Summary script to finish before continuing
     let _result = run_python.wait().expect("Could not wait for Python script to complete");
+
+    // Read in the Python script-generated Summary
+    let summary_file = File::open("summary.txt").unwrap();
+    let summary_reader = BufReader::new(summary_file);
+    let mut summary = String::new();
+
+    // Push file lines to string
+    for line in summary_reader.lines() {
+        match line {
+            Ok(line) => { summary.push_str(&line); }
+            Err(err) => { println!("[ ERROR ] : {}", err); }
+        }
+    }
 
     // Create an empty string to contain the "linked" text.
     let mut linked_text = String::new();
