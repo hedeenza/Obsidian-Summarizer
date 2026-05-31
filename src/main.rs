@@ -33,6 +33,21 @@ fn main() {
         }
     }
 
+    // Run Python from the Virtual Environment
+    #[cfg(target_os = "windows")]
+    let python = "./venv/Scripts/python.exe";
+    #[cfg(not(target_os = "windows"))]
+    let python = "./venv/bin/python";
+
+    // Run the Python Summary Script
+    let mut run_python = Command::new(python)
+        .arg("summary.py")
+        .spawn()
+        .expect("Could not run Python summary script");
+
+    // Wait for the Python Summary script to finish before continuing
+    let _result = run_python.wait().expect("Could not wait for Python script to complete");
+
     // Create an empty string to contain the "linked" text.
     let mut linked_text = String::new();
 
