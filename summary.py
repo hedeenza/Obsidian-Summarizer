@@ -19,7 +19,6 @@ with open(sys.argv[1], 'r', encoding = 'utf-8') as input_file:
 
         # Output 
         output = ""
-        print("Summary:")
         for sentence in summary:
             string = f'{sentence}'
             output = output + string + ' '

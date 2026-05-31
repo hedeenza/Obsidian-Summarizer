@@ -250,6 +250,11 @@ fn main() {
                             let linked_wordi = format!("{}]],", stripped_word);
                             let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
                             linked_text.push_str(&(linked_linei + " "));
+                        } else if index[0].ends_with(".") {
+                            let stripped_word = index[0].replace(".", "");
+                            let linked_word0 = format!("[[{}]].", stripped_word);
+                            let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
+                            linked_text.push_str(&(linked_line0 + " "));
                         } else {
                             let linked_wordi = format!("{}]]", index[i]);
                             let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
@@ -323,6 +328,11 @@ fn main() {
                             let linked_wordi = format!("{}]],", stripped_word);
                             let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
                             linked_text.push_str(&(linked_linei + " "));
+                        } else if index[0].ends_with(".") {
+                            let stripped_word = index[0].replace(".", "");
+                            let linked_word0 = format!("[[{}]].", stripped_word);
+                            let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
+                            linked_text.push_str(&(linked_line0 + " "));
                         } else {
                             let linked_wordi = format!("{}]]", index[i]);
                             let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
@@ -391,6 +401,11 @@ fn main() {
                     let linked_word0 = format!("[[{}]],", stripped_word);
                     let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
                     linked_text.push_str(&(linked_line0 + " "));
+                } else if index[0].ends_with(".") {
+                    let stripped_word = index[0].replace(".", "");
+                    let linked_word0 = format!("[[{}]].", stripped_word);
+                    let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
+                    linked_text.push_str(&(linked_line0 + " "));
                 } else {
                     let linked_word0 = format!("[[{}]]", index[0]);
                     let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
@@ -450,6 +465,9 @@ fn main() {
         let cleaned_text = initial_text.replace(&final_linked_stop, &final_replacement);
         linked_text = cleaned_text;
     }
+
+    // Print Obsidian YAML Header for tags
+    println!("---\ntitle: \nauthor: \npublication-date: \naccess-date: \nlink: \ntags: \n---\n");
 
     println!("Linked Text:\n{}\n", linked_text);
 
