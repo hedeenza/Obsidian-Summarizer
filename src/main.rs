@@ -1,8 +1,7 @@
 use clap::Parser;
 use regex::Regex;
 use std::collections::HashSet;
-use std::fs::File;
-use std::io::{BufRead, BufReader, self, Write};
+use std::io;
 use std::process::ExitCode;
 
 mod stop_words;
@@ -13,6 +12,9 @@ use crate::python_summary::run_python_summarizer;
 
 mod link_entities;
 use crate::link_entities::link_entities;
+
+mod save_choice;
+use crate::save_choice::save_choice;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -29,7 +31,6 @@ struct CLI {
     #[arg(short, long)]
     summary_length: u8,
 }
-
 
 fn main() -> ExitCode {
     // Parse CLI arguments
@@ -66,43 +67,11 @@ fn main() -> ExitCode {
     println!("Summary:\n{}\n", linked_text);
 
     // Ask if User wants to save output to file
-    let mut save_choice = String::new();
+    let mut decision = String::new();
     println!("\nSave to file? (y/n)");
-    io::stdin().read_line(&mut save_choice).expect("Failed to read line");
+    io::stdin().read_line(&mut decision).expect("Failed to read line");
 
-    // If the user does want to save, write to file
-    if save_choice.trim() == "y" {
-        // Create the output file
-        let output_name = format!("{}.md", &args.output);
-        let mut output_file = File::create(output_name).expect("Could not create output file");
-        // Write Properties Header
-        let _write_header = writeln!(output_file, "{}", "---\ntitle: \nauthor: \npublication-date: \naccess-date: \nlink: \ntags: \n---\n");
-        // Write Output File Name as Document Title
-        let title = format!("# {}", args.output);
-        let _write_title = writeln!(output_file, "{}", title);
-        // Write the Linked Summary
-        let linked_summary = format!("## Summary:\n{}\n", linked_text);
-        let _write_summary = writeln!(output_file, "{}", linked_summary);
-        // Write the Original Text to the Output
-        let input_file = File::open(&args.input).unwrap();
-        let input_reader = BufReader::new(input_file);
-        let _write_original_header = writeln!(output_file, "{}", "## Original Text:");
-        for line in input_reader.lines() {
-            match line {
-                Ok(line) => { let _write_original = writeln!(output_file, "{}", line); }
-                Err(err) => { println!("[ ERROR ] : {}", err); }
-            }
-        }
-        // Exit with Success
-        ExitCode::from(0)
-    // If user does not want to save, exit cleanly
-    } else if save_choice.trim() == "n" {
-        // Exit with Success
-        ExitCode::from(0)
-    // If input is invalid, exit with failure
-    } else {
-        // Exit with Failure
-        println!("Invalid Input");
-        ExitCode::from(1)
-    }
+    // Handle Save Deicision
+    let exit_code = save_choice(decision, args.input, args.output, linked_text);
+    exit_code
 }
