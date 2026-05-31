@@ -2,7 +2,7 @@ use clap::Parser;
 use regex::Regex;
 use std::collections::HashSet;
 use std::fs::File;
-use std::io::{BufRead, BufReader, self};
+use std::io::{BufRead, BufReader, self, Write};
 use std::process::{Command, ExitCode};
 
 #[derive(Parser)]
@@ -475,29 +475,39 @@ fn main() -> ExitCode {
     io::stdin().read_line(&mut save_choice).expect("Failed to read line");
 
     if save_choice.trim() == "y" {
-        println!("---\ntitle: \nauthor: \npublication-date: \naccess-date: \nlink: \ntags: \n---\n");
-        println!("# {}", args.output);
-        println!("## Summary:\n{}\n", linked_text);
-        // Push file lines to string
+        // Create the output file
+        let output_name = format!("{}.md", &args.output);
+        let mut output_file = File::create(output_name).expect("Could not create output file");
+        // Write Properties Header
+        let _write_header = writeln!(output_file, "{}", "---\ntitle: \nauthor: \npublication-date: \naccess-date: \nlink: \ntags: \n---\n");
+        // Write Output File Name as Document Title
+        let title = format!("# {}", args.output);
+        let _write_title = writeln!(output_file, "{}", title);
+        // Write the Linked Summary
+        let linked_summary = format!("## Summary:\n{}\n", linked_text);
+        let _write_summary = writeln!(output_file, "{}", linked_summary);
+        // Write the Original Text to the Output
         let input_file = File::open(&args.input).unwrap();
         let input_reader = BufReader::new(input_file);
-        println!("## Original Text:");
+        let _write_original_header = writeln!(output_file, "{}", "## Original Text:");
         for line in input_reader.lines() {
             match line {
-                Ok(line) => { println!("{}", line); }
+                Ok(line) => { let _write_original = writeln!(output_file, "{}", line); }
                 Err(err) => { println!("[ ERROR ] : {}", err); }
             }
         }
+        // Exit with Success
         ExitCode::from(0)
     } else if save_choice.trim() == "n" {
+        // Exit with Success
         ExitCode::from(0)
     } else {
+        // Exit with Failure
         println!("Invalid Input");
         ExitCode::from(1)
     }
 
 }
-
 
 const STOP_WORDS: [&str; 2364] = [ 
     "Able", "About", "Above", "Abst", "Accordance", "According", "Accordingly", "Across", "Act",
