@@ -63,7 +63,7 @@ alias osm="obsidian-summarizer"
 ```
 
 ## Companion Script - Count Sentences
-`./count_sentences <FILE>`
+`./count_sentences.sh <FILE>`
 
 - Counts the number of sentences (ending in periods, question marks, or exclamation points) in a file.
 - May be helpful in determining how long the <SUMMARY_LENGTH> should be.
