@@ -2,6 +2,7 @@ use clap::Parser;
 use regex::Regex;
 use std::collections::HashSet;
 use std::io;
+use std::env;
 use std::process::ExitCode;
 
 mod stop_words;
@@ -23,7 +24,7 @@ struct CLI {
     #[arg(short, long)]
     input: String,
 
-    /// Input text file to summarize
+    /// Output file name
     #[arg(short, long)]
     output: String,
 
@@ -36,8 +37,22 @@ fn main() -> ExitCode {
     // Parse CLI arguments
     let args = CLI::parse();
 
+    // Set up to read the file containing Python venv and summary.py paths
+    // Get user home directory
+    let mut home_directory = String::new();
+    match env::home_dir() {
+        Some(path) => {
+            home_directory.push_str(&path.display().to_string());
+        }
+        None => {
+            panic!("Could not read your home directory");
+        }
+    }
+    // Create the full path to the paths.env file
+    let paths_env = home_directory + "/.obsidian_summarizer_paths.env";
+
     // Run the Python Summarizer script
-    let summary = run_python_summarizer(&args.input, args.summary_length);
+    let summary = run_python_summarizer(&args.input, paths_env, args.summary_length);
 
     // Create an empty string to contain the "linked" text.
     let mut linked_text = String::new();
