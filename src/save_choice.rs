@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader, Write};
-use std::process::ExitCode;
+use std::process::{Command, ExitCode};
 
 pub fn save_choice(
     decision: String,
@@ -39,14 +39,29 @@ pub fn save_choice(
                 }
             }
         }
+        // Remove the temporary "summary.txt" file
+        let _remove = Command::new("rm")
+            .arg("summary.txt")
+            .spawn()
+            .expect("Could not delete the temporary summary.txt file");
         // Exit with Success
         ExitCode::from(0)
         // If user does not want to save, exit cleanly
     } else if decision.trim() == "n" {
+        // Remove the temporary "summary.txt" file
+        let _remove = Command::new("rm")
+            .arg("summary.txt")
+            .spawn()
+            .expect("Could not delete the temporary summary.txt file");
         // Exit with Success
         ExitCode::from(0)
         // If input is invalid, exit with failure
     } else {
+        // Remove the temporary "summary.txt" file
+        let _remove = Command::new("rm")
+            .arg("summary.txt")
+            .spawn()
+            .expect("Could not delete the temporary summary.txt file");
         // Exit with Failure
         println!("Invalid Input");
         ExitCode::from(1)
