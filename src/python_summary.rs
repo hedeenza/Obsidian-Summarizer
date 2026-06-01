@@ -11,8 +11,12 @@ pub fn run_python_summarizer(input: &String, summary_length: u8) -> String {
     // Push file lines to string
     for line in input_reader.lines() {
         match line {
-            Ok(line) => { text.push_str(&line); }
-            Err(err) => { println!("[ ERROR ] : {}", err); }
+            Ok(line) => {
+                text.push_str(&line);
+            }
+            Err(err) => {
+                println!("[ ERROR ] : {}", err);
+            }
         }
     }
 
@@ -31,7 +35,9 @@ pub fn run_python_summarizer(input: &String, summary_length: u8) -> String {
         .expect("Could not run Python summary script");
 
     // Wait for the Python Summary script to finish before continuing
-    let _result = run_python.wait().expect("Could not wait for Python script to complete");
+    let _result = run_python
+        .wait()
+        .expect("Could not wait for Python script to complete");
 
     // Read in the Python script-generated Summary
     let summary_file = File::open("summary.txt").unwrap();
@@ -41,8 +47,12 @@ pub fn run_python_summarizer(input: &String, summary_length: u8) -> String {
     // Push file lines to string
     for line in summary_reader.lines() {
         match line {
-            Ok(line) => { summary.push_str(&line); }
-            Err(err) => { println!("[ ERROR ] : {}", err); }
+            Ok(line) => {
+                summary.push_str(&line);
+            }
+            Err(err) => {
+                println!("[ ERROR ] : {}", err);
+            }
         }
     }
     summary

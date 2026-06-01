@@ -1,6 +1,12 @@
 use std::collections::HashSet;
 
-pub fn link_entities(text_vector: Vec<&str>, window_size: usize, linked: &mut String, entity_detect: regex::Regex, mut previously_linked: HashSet<Vec<Vec<String>>>) {
+pub fn link_entities(
+    text_vector: Vec<&str>,
+    window_size: usize,
+    linked: &mut String,
+    entity_detect: regex::Regex,
+    mut previously_linked: HashSet<Vec<Vec<String>>>,
+) {
     // Create a window to examine the text vector 4 words at a time
     let mut window = text_vector.windows(window_size);
 
@@ -51,7 +57,7 @@ pub fn link_entities(text_vector: Vec<&str>, window_size: usize, linked: &mut St
                 window.next();
             // Otherwise...
             } else {
-                // For each 
+                // For each
                 for (i, _content) in slice.clone().into_iter().enumerate() {
                     // Add the opening linking brackets, [[, to the first word
                     if i == 0 {
@@ -128,10 +134,13 @@ pub fn link_entities(text_vector: Vec<&str>, window_size: usize, linked: &mut St
                 previously_linked.insert(outer_strip_period);
                 previously_linked.insert(outer_possessive);
                 previously_linked.insert(outer_strip_possessive);
-
             }
         // If the first 3 slots contain capital words...
-        } else if w & x & y | w & (index[1] == "of") & y | w & (index[1] == "the") & y | w & (index[1] == "for") & y {
+        } else if w & x & y
+            | w & (index[1] == "of") & y
+            | w & (index[1] == "the") & y
+            | w & (index[1] == "for") & y
+        {
             let mut tester = Vec::new();
             let slice: Vec<String> = vec![
                 index[0].to_string(),
@@ -224,7 +233,6 @@ pub fn link_entities(text_vector: Vec<&str>, window_size: usize, linked: &mut St
                 }
                 window.next();
             } else {
-
                 for (i, _content) in slice.clone().into_iter().enumerate() {
                     if i == 0 {
                         let linked_word = format!("[[{}", index[i]);
@@ -303,7 +311,6 @@ pub fn link_entities(text_vector: Vec<&str>, window_size: usize, linked: &mut St
                 }
                 window.next();
             } else {
-
                 if index[0].contains("'s") {
                     let stripped_word = index[0].replace("'s", "");
                     let linked_word0 = format!("[[{}]]'s", stripped_word);

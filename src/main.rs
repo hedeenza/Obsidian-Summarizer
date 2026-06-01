@@ -22,7 +22,7 @@ struct CLI {
     /// Input text file to summarize
     #[arg(short, long)]
     input: String,
-    
+
     /// Input text file to summarize
     #[arg(short, long)]
     output: String,
@@ -41,7 +41,7 @@ fn main() -> ExitCode {
 
     // Create an empty string to contain the "linked" text.
     let mut linked_text = String::new();
-    
+
     // Create a HashSet to contain a unique set of all words that have previously been linked
     // This will help prevent the same terms from getting linked over and over again
     let previously_linked: HashSet<Vec<Vec<String>>> = HashSet::new();
@@ -51,14 +51,20 @@ fn main() -> ExitCode {
 
     // Split text on white space and collect into a vector
     let mut text_vec: Vec<&str> = summary.split(" ").collect();
-    
+
     // The window will be 4 wide, so add 3 "trailing filler" values so the last word can fall into place
     text_vec.push("trailing filler");
     text_vec.push("trailing filler");
     text_vec.push("trailing filler");
 
     // Wrap entities in Obsidian-style Links
-    link_entities(text_vec, 4, &mut linked_text, capital_detect, previously_linked);
+    link_entities(
+        text_vec,
+        4,
+        &mut linked_text,
+        capital_detect,
+        previously_linked,
+    );
 
     // Clean out the "stop words"
     clean_stop_words(&mut linked_text);
@@ -69,7 +75,9 @@ fn main() -> ExitCode {
     // Ask if User wants to save output to file
     let mut decision = String::new();
     println!("\nSave to file? (y/n)");
-    io::stdin().read_line(&mut decision).expect("Failed to read line");
+    io::stdin()
+        .read_line(&mut decision)
+        .expect("Failed to read line");
 
     // Handle Save Deicision
     let exit_code = save_choice(decision, args.input, args.output, linked_text);
