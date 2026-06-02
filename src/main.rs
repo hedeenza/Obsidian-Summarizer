@@ -19,7 +19,7 @@ use crate::save_choice::save_choice;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
-struct CLI {
+struct Cli {
     /// Input text file to summarize
     #[arg(short, long)]
     input: String,
@@ -35,7 +35,7 @@ struct CLI {
 
 fn main() -> ExitCode {
     // Parse CLI arguments
-    let args = CLI::parse();
+    let args = Cli::parse();
 
     // Set up to read the file containing Python venv and summary.py paths
     // Get user home directory
@@ -95,6 +95,5 @@ fn main() -> ExitCode {
         .expect("Failed to read line");
 
     // Handle Save Deicision
-    let exit_code = save_choice(decision, args.input, args.output, linked_text);
-    exit_code
+    save_choice(decision, args.input, args.output, linked_text)
 }

@@ -12,7 +12,7 @@ pub fn clean_stop_words(linked_text: &mut String) {
     }
 }
 
-const STOP_WORDS: [&str; 2364] = [
+static STOP_WORDS: [&str; 2364] = [
     "Able", "About", "Above", "Abst", "Accordance", "According", "Accordingly", "Across", "Act",
     "Actually", "Ad", "Added", "Adj", "Affected", "Affecting", "Affects", "After", "Afterwards",
     "Again", "Against", "Ah", "Ain", "Ain't", "All", "Allow", "Allows", "Almost", "Alone", "Along",

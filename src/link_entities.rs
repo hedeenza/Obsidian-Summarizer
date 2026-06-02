@@ -13,10 +13,10 @@ pub fn link_entities(
     // While there are still viable "windows"...
     while let Some(index) = window.next() {
         // Create values to stand in for the true/false results of matches to keep if statements cleaner
-        let w = entity_detect.is_match(&index[0]);
-        let x = entity_detect.is_match(&index[1]);
-        let y = entity_detect.is_match(&index[2]);
-        let z = entity_detect.is_match(&index[3]);
+        let w = entity_detect.is_match(index[0]);
+        let x = entity_detect.is_match(index[1]);
+        let y = entity_detect.is_match(index[2]);
+        let z = entity_detect.is_match(index[3]);
 
         // Create vectors to hold variants of the linked items to prevent them from being linked
         // again if they appear again in other written contexts
@@ -78,12 +78,12 @@ pub fn link_entities(
                             let linked_wordi = format!("{}]],", stripped_word);
                             let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
                             linked.push_str(&(linked_linei + " "));
-                        // If there's a period, add the closing linking brackets before the period
-                        } else if index[i].contains(".") {
-                            let stripped_word = index[i].replace(".", "");
-                            let linked_wordi = format!("{}]].", stripped_word);
-                            let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
-                            linked.push_str(&(linked_linei + " "));
+                        // // If there's a period, add the closing linking brackets before the period
+                        // } else if index[i].contains(".") {
+                        //     let stripped_word = index[i].replace(".", "");
+                        //     let linked_wordi = format!("{}]].", stripped_word);
+                        //     let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
+                        //     linked.push_str(&(linked_linei + " "));
                         // Otherwise, link the last word normally
                         } else {
                             let linked_wordi = format!("{}]]", index[i]);
@@ -92,7 +92,7 @@ pub fn link_entities(
                         }
                     // Otherwise don't add any linking brackets to the word
                     } else {
-                        let linked_word = format!("{}", index[i]);
+                        let linked_word = index[i].to_string();
                         let linked_line = index[i].replace(index[i], &linked_word);
                         linked.push_str(&(linked_line + " "));
                     }
@@ -172,18 +172,18 @@ pub fn link_entities(
                             let linked_wordi = format!("{}]],", stripped_word);
                             let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
                             linked.push_str(&(linked_linei + " "));
-                        } else if index[0].ends_with(".") {
-                            let stripped_word = index[0].replace(".", "");
-                            let linked_word0 = format!("[[{}]].", stripped_word);
-                            let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
-                            linked.push_str(&(linked_line0 + " "));
+                        // } else if index[0].ends_with(".") {
+                        //     let stripped_word = index[0].replace(".", "");
+                        //     let linked_word0 = format!("[[{}]].", stripped_word);
+                        //     let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
+                        //     linked.push_str(&(linked_line0 + " "));
                         } else {
                             let linked_wordi = format!("{}]]", index[i]);
                             let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
                             linked.push_str(&(linked_linei + " "));
                         }
                     } else {
-                        let linked_word = format!("{}", index[i]);
+                        let linked_word = index[i].to_string();
                         let linked_line = index[i].replace(index[i], &linked_word);
                         linked.push_str(&(linked_line + " "));
                     }
@@ -249,18 +249,18 @@ pub fn link_entities(
                             let linked_wordi = format!("{}]],", stripped_word);
                             let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
                             linked.push_str(&(linked_linei + " "));
-                        } else if index[0].ends_with(".") {
-                            let stripped_word = index[0].replace(".", "");
-                            let linked_word0 = format!("[[{}]].", stripped_word);
-                            let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
-                            linked.push_str(&(linked_line0 + " "));
+                        // } else if index[0].ends_with(".") {
+                        //     let stripped_word = index[0].replace(".", "");
+                        //     let linked_word0 = format!("[[{}]].", stripped_word);
+                        //     let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
+                        //     linked.push_str(&(linked_line0 + " "));
                         } else {
                             let linked_wordi = format!("{}]]", index[i]);
                             let linked_linei = index[i].replacen(index[i], &linked_wordi, i);
                             linked.push_str(&(linked_linei + " "));
                         }
                     } else {
-                        let linked_word = format!("{}", index[i]);
+                        let linked_word = index[i].to_string();
                         let linked_line = index[i].replace(index[i], &linked_word);
                         linked.push_str(&(linked_line + " "));
                     }
@@ -321,11 +321,11 @@ pub fn link_entities(
                     let linked_word0 = format!("[[{}]],", stripped_word);
                     let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
                     linked.push_str(&(linked_line0 + " "));
-                } else if index[0].ends_with(".") {
-                    let stripped_word = index[0].replace(".", "");
-                    let linked_word0 = format!("[[{}]].", stripped_word);
-                    let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
-                    linked.push_str(&(linked_line0 + " "));
+                // } else if index[0].ends_with(".") {
+                //     let stripped_word = index[0].replace(".", "");
+                //     let linked_word0 = format!("[[{}]].", stripped_word);
+                //     let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
+                //     linked.push_str(&(linked_line0 + " "));
                 } else {
                     let linked_word0 = format!("[[{}]]", index[0]);
                     let linked_line0 = index[0].replacen(index[0], &linked_word0, 1);
@@ -337,7 +337,7 @@ pub fn link_entities(
                 outer_comma.push(comma_vec);
 
                 let strip_comma = index[0].replace(",", "");
-                let linked_strip_comma = format!("{}", strip_comma);
+                let linked_strip_comma = strip_comma.to_string();
                 strip_comma_vec.push(linked_strip_comma);
                 outer_strip_comma.push(strip_comma_vec);
 
@@ -346,7 +346,7 @@ pub fn link_entities(
                 outer_period.push(period_vec);
 
                 let strip_period = index[0].replace(".", "");
-                let linked_strip_period = format!("{}", strip_period);
+                let linked_strip_period = strip_period.to_string();
                 strip_period_vec.push(linked_strip_period);
                 outer_strip_period.push(strip_period_vec);
 
@@ -355,7 +355,7 @@ pub fn link_entities(
                 outer_possessive.push(possessive_vec);
 
                 let strip_possessive = index[0].replace("'s", "");
-                let linked_strip_possessive = format!("{}", strip_possessive);
+                let linked_strip_possessive = strip_possessive.to_string();
                 strip_possessive_vec.push(linked_strip_possessive);
                 outer_strip_possessive.push(strip_possessive_vec);
 

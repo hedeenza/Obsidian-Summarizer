@@ -16,7 +16,6 @@ pub fn save_choice(
         // Write Properties Header
         let _write_header = writeln!(
             output_file,
-            "{}",
             "---\ntitle: \nauthor: \npublication-date: \naccess-date: \nlink: \ntags: \n---\n"
         );
         // Write Output File Name as Document Title
@@ -28,7 +27,7 @@ pub fn save_choice(
         // Write the Original Text to the Output
         let input_file = File::open(&input_file).unwrap();
         let input_reader = BufReader::new(input_file);
-        let _write_original_header = writeln!(output_file, "{}", "## Original Text:");
+        let _write_original_header = writeln!(output_file, "## Original Text:");
         for line in input_reader.lines() {
             match line {
                 Ok(line) => {
@@ -43,7 +42,8 @@ pub fn save_choice(
         let _remove = Command::new("rm")
             .arg("summary.txt")
             .spawn()
-            .expect("Could not delete the temporary summary.txt file");
+            .expect("Could not delete the temporary summary.txt file")
+            .wait();
         // Exit with Success
         ExitCode::from(0)
         // If user does not want to save, exit cleanly
@@ -52,7 +52,8 @@ pub fn save_choice(
         let _remove = Command::new("rm")
             .arg("summary.txt")
             .spawn()
-            .expect("Could not delete the temporary summary.txt file");
+            .expect("Could not delete the temporary summary.txt file")
+            .wait();
         // Exit with Success
         ExitCode::from(0)
         // If input is invalid, exit with failure
@@ -61,7 +62,8 @@ pub fn save_choice(
         let _remove = Command::new("rm")
             .arg("summary.txt")
             .spawn()
-            .expect("Could not delete the temporary summary.txt file");
+            .expect("Could not delete the temporary summary.txt file")
+            .wait();
         // Exit with Failure
         println!("Invalid Input");
         ExitCode::from(1)

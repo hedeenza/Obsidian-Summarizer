@@ -4,7 +4,7 @@ use std::process::Command;
 
 pub fn run_python_summarizer(input: &String, paths: String, summary_length: u8) -> String {
     // Read input file
-    let input_file = File::open(&input).unwrap();
+    let input_file = File::open(input).unwrap();
     let input_reader = BufReader::new(input_file);
     let mut text = String::new();
 
@@ -34,8 +34,6 @@ pub fn run_python_summarizer(input: &String, paths: String, summary_length: u8) 
                             venv_path.push_str(&line);
                         } else if line.ends_with("summary.py") {
                             script_path.push_str(&line);
-                        } else {
-                            ()
                         }
                     }
                     Err(err) => {
