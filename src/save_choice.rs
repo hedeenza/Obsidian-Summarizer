@@ -7,7 +7,7 @@ pub fn save_choice(
     input_file: String,
     output_file: String,
     linked: String,
-    tag: &str,
+    tag: Option<String>,
     unlinked: String,
 ) -> ExitCode {
     // If the user does want to save, write to file
@@ -17,11 +17,17 @@ pub fn save_choice(
         let mut output_file = File::create(&output_name).expect("Could not create output file");
         // Write Properties Header, including a Group Tag (for filtering an Obsidian Base), and the
         // unlinked summary
+        // let clean_tag = match tag {
+        //     Some(group) => group,
+        //     None => String::from(""),
+        // };
+        let clean_tag = tag.unwrap_or_default();
+        let formatted_tag = format!("- {}", clean_tag);
         let _write_header = writeln!(
             output_file,
-            "---\ntitle: \nauthor: \npublication-date: \naccess-date: \nlink: \ntags: {}\nsummary: {}\n---\n",
-            tag,
-            unlinked
+            "---\ntitle: \nauthor: \npublication-date: \naccess-date: \nlink: \ntags: {}\nsummary: {}\n---",
+            formatted_tag,
+            unlinked,
         );
         // Write Output File Name as Document Title
         let title = format!("# {}", output_name);

@@ -31,6 +31,10 @@ struct Cli {
     /// Number of sentences in Summary
     #[arg(short, long)]
     summary_length: u8,
+    
+    /// Group Tag, in CamelCase [default = None]
+    #[arg(short, long, default_value = None)]
+    group_tag: Option<String>,
 }
 
 fn main() -> ExitCode {
@@ -95,13 +99,13 @@ fn main() -> ExitCode {
         .expect("Failed to read Answer");
 
     // Ask if User wants to save output to file
-    let mut group_tag = String::new();
-    println!("\nIf this is part of a group of files, please type the group tag (CamelCase)");
-    io::stdin()
-        .read_line(&mut group_tag)
-        .expect("Failed to read Group Tag");
-    let group_tag = group_tag.trim();
-
+    // let mut group_tag = String::new();
+    // println!("\nIf this is part of a group of files, please type the group tag (CamelCase)");
+    // io::stdin()
+    //     .read_line(&mut group_tag)
+    //     .expect("Failed to read Group Tag");
+    // let group_tag = group_tag.trim();
     // Handle Save Deicision
-    save_choice(decision, args.input, args.output, linked_text, group_tag, summary)
+    save_choice(decision, args.input, args.output, linked_text, args.group_tag, summary)
+
 }
