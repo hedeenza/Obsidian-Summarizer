@@ -98,13 +98,6 @@ fn main() -> ExitCode {
         .read_line(&mut decision)
         .expect("Failed to read Answer");
 
-    // Ask if User wants to save output to file
-    // let mut group_tag = String::new();
-    // println!("\nIf this is part of a group of files, please type the group tag (CamelCase)");
-    // io::stdin()
-    //     .read_line(&mut group_tag)
-    //     .expect("Failed to read Group Tag");
-    // let group_tag = group_tag.trim();
     // Handle Save Deicision
     save_choice(decision, args.input, args.output, linked_text, args.group_tag, summary)
 
