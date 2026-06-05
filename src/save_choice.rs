@@ -7,16 +7,21 @@ pub fn save_choice(
     input_file: String,
     output_file: String,
     linked: String,
+    tag: &str,
+    unlinked: String,
 ) -> ExitCode {
     // If the user does want to save, write to file
     if decision.trim() == "y" {
         // Create the output file
         let output_name = format!("{}.md", &output_file);
         let mut output_file = File::create(&output_name).expect("Could not create output file");
-        // Write Properties Header
+        // Write Properties Header, including a Group Tag (for filtering an Obsidian Base), and the
+        // unlinked summary
         let _write_header = writeln!(
             output_file,
-            "---\ntitle: \nauthor: \npublication-date: \naccess-date: \nlink: \ntags: \n---\n"
+            "---\ntitle: \nauthor: \npublication-date: \naccess-date: \nlink: \ntags: {}\nsummary: {}\n---\n",
+            tag,
+            unlinked
         );
         // Write Output File Name as Document Title
         let title = format!("# {}", output_name);
