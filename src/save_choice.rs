@@ -15,14 +15,8 @@ pub fn save_choice(
         // Create the output file
         let output_name = format!("{}.md", &output_file);
         let mut output_file = File::create(&output_name).expect("Could not create output file");
-        // Write Properties Header, including a Group Tag (for filtering an Obsidian Base), and the
-        // unlinked summary
-        // let clean_tag = match tag {
-        //     Some(group) => group,
-        //     None => String::from(""),
-        // };
         let clean_tag = tag.unwrap_or_default();
-        let formatted_tag = format!("- {}", clean_tag);
+        let formatted_tag = format!("\n\t- {}", clean_tag);
         let _write_header = writeln!(
             output_file,
             "---\ntitle: \nauthor: \npublication-date: \naccess-date: \nlink: \ntags: {}\nsummary: {}\n---",
