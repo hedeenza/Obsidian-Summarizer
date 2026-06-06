@@ -22,6 +22,10 @@ Download required modules:
 
 Download NLTK tokenizers for the Python `summary.py` script
 `$ python get_nltk_tokenizers.py`
+If there are errors with the SSL Certificate, you can download the zipped tokenizers at [*https://www.nltk.org/nltk_data/*](https://www.nltk.org/nltk_data/). The "punkt_tab" tokenizers are under item *78. Punkt Tokenizer Models*.  
+Unzip the file, and place the unzipped folder in `~/nltk_data/tokenizers/`, creating if necessary, such that `~/nltk_data/tokenizers/punkt_tab/`  
+
+You can move the `nltk_data` directory out of your home directory and retain function by setting the `NLTK_DATA` environment variable to point to the top level `nltk_data` directory. [Reference.](https://www.nltk.org/data.html#manual-installation)
 
 ## Setting Python Paths
 Place the `.obsidian_summarizer_paths.env` file in your home directory, and edit to reflect the absolute paths of the virtual environment and `summary.py`
