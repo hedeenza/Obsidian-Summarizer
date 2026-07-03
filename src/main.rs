@@ -1,8 +1,8 @@
 use clap::Parser;
 // use regex::Regex;
 // use std::collections::HashSet;
-use std::io;
 use std::env;
+use std::io;
 use std::process::ExitCode;
 
 mod stop_words;
@@ -31,7 +31,7 @@ struct Cli {
     /// Number of sentences in Summary
     #[arg(short, long)]
     summary_length: u8,
-    
+
     /// Group Tag, in CamelCase [default = None]
     #[arg(short, long, default_value = None)]
     group_tag: Option<String>,
@@ -79,5 +79,12 @@ fn main() -> ExitCode {
         .expect("Failed to read Answer");
 
     // Handle Save Deicision
-    save_choice(decision, args.input, args.output, linked_text, args.group_tag, summary)
+    save_choice(
+        decision,
+        args.input,
+        args.output,
+        linked_text,
+        args.group_tag,
+        summary,
+    )
 }

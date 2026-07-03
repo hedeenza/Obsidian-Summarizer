@@ -20,8 +20,7 @@ pub fn save_choice(
         let _write_header = writeln!(
             output_file,
             "---\ntitle: \nauthor: \npublication-date: \naccess-date: \nlink: \ntags: {}\nsummary: {}\n---",
-            formatted_tag,
-            unlinked,
+            formatted_tag, unlinked,
         );
         // Write Output File Name as Document Title
         let title = format!("# {}", output_name);

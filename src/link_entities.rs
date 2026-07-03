@@ -6,7 +6,7 @@ pub fn link_entities_new(text_vector: Vec<&str>) -> String {
     let capital_word = Regex::new(r"^[A-Z]").unwrap();
 
     // Set a vector of allowable filler words for Pointer 2 to move through
-    let allowable_filler = vec!["of", "the", "from"];
+    let allowable_filler = ["of", "the", "from"];
 
     // Create a string to hold the linked text
     let mut linked_text = String::new();
@@ -20,7 +20,7 @@ pub fn link_entities_new(text_vector: Vec<&str>) -> String {
     // While the Pointer 1 index is less than the length of the content vector...
     while pointer1_index < text_vector.len() {
         // If Pointer 1 hits a line with content in it...
-        if capital_word.is_match(&text_vector[pointer1_index]) {
+        if capital_word.is_match(text_vector[pointer1_index]) {
             // Create a new string to hold the entire entity to link
             let mut entity: String = String::new();
             // Set Pointer 2 to where Pointer 1 is
@@ -28,7 +28,9 @@ pub fn link_entities_new(text_vector: Vec<&str>) -> String {
             // While the Pointer 2 index is less than the length of the content vector...
             while pointer2_index < text_vector.len() {
                 // If Pointer 2 hits a blank line...
-                if !capital_word.is_match(&text_vector[pointer2_index]) && !allowable_filler.contains(&text_vector[pointer2_index]) {
+                if !capital_word.is_match(text_vector[pointer2_index])
+                    && !allowable_filler.contains(&text_vector[pointer2_index])
+                {
                     // Push each line between Pointer 1 and Pointer 2 to a Vector
                     for word in &text_vector[pointer1_index..pointer2_index] {
                         let formatted = format!("{} ", word);
@@ -58,7 +60,7 @@ pub fn link_entities_new(text_vector: Vec<&str>) -> String {
                         let linked_entity = format!("[[{}]]", entity);
                         linked_text.push_str(&(linked_entity + " "));
                     }
-                    
+
                     // Create the variants of the Entity and add those to "previously_linked"
                     let strip_characters = vec![".", ",", "'s"];
                     for character in strip_characters {
