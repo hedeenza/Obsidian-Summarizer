@@ -67,7 +67,7 @@ pub fn link_entities_new(text_vector: Vec<&str>) -> String {
                     }
 
                     // Move Pointer 1 up to Pointer 2
-                    pointer1_index = pointer2_index;
+                    pointer1_index = pointer2_index - 1;
                     break;
                 }
                 // Increment Pointer 2 by One

@@ -58,19 +58,12 @@ fn main() -> ExitCode {
     // Run the Python Summarizer script
     let summary = run_python_summarizer(&args.input, paths_env, args.summary_length);
 
-    println!("{}", summary);
-    
     // Split text on white space and collect into a vector
     let text_vec: Vec<&str> = summary.split(" ").collect();
-
-    // The window will be 4 wide, so add 3 "trailing filler" values so the last word can fall into place
-    // text_vec.push("trailing filler");
 
     // Create an empty string to contain the "linked" text.
     // Wrap entities in Obsidian-style Links
     let mut linked_text = link_entities_new(text_vec);
-
-    println!("{}", linked_text);
 
     // Clean out the "stop words"
     clean_stop_words(&mut linked_text);
@@ -87,5 +80,4 @@ fn main() -> ExitCode {
 
     // Handle Save Deicision
     save_choice(decision, args.input, args.output, linked_text, args.group_tag, summary)
-
 }
