@@ -1,6 +1,6 @@
 use clap::Parser;
-use regex::Regex;
-use std::collections::HashSet;
+// use regex::Regex;
+// use std::collections::HashSet;
 use std::io;
 use std::env;
 use std::process::ExitCode;
@@ -12,7 +12,7 @@ mod python_summary;
 use crate::python_summary::run_python_summarizer;
 
 mod link_entities;
-use crate::link_entities::link_entities;
+use crate::link_entities::link_entities_new;
 
 mod save_choice;
 use crate::save_choice::save_choice;
@@ -58,32 +58,19 @@ fn main() -> ExitCode {
     // Run the Python Summarizer script
     let summary = run_python_summarizer(&args.input, paths_env, args.summary_length);
 
-    // Create an empty string to contain the "linked" text.
-    let mut linked_text = String::new();
-
-    // Create a HashSet to contain a unique set of all words that have previously been linked
-    // This will help prevent the same terms from getting linked over and over again
-    let previously_linked: HashSet<Vec<Vec<String>>> = HashSet::new();
-
-    // Create Regex pattern to match words that start with a capital letter
-    let capital_detect = Regex::new(r"^[A-Z]").unwrap();
-
+    println!("{}", summary);
+    
     // Split text on white space and collect into a vector
-    let mut text_vec: Vec<&str> = summary.split(" ").collect();
+    let text_vec: Vec<&str> = summary.split(" ").collect();
 
     // The window will be 4 wide, so add 3 "trailing filler" values so the last word can fall into place
-    text_vec.push("trailing filler");
-    text_vec.push("trailing filler");
-    text_vec.push("trailing filler");
+    // text_vec.push("trailing filler");
 
+    // Create an empty string to contain the "linked" text.
     // Wrap entities in Obsidian-style Links
-    link_entities(
-        text_vec,
-        4,
-        &mut linked_text,
-        capital_detect,
-        previously_linked,
-    );
+    let mut linked_text = link_entities_new(text_vec);
+
+    println!("{}", linked_text);
 
     // Clean out the "stop words"
     clean_stop_words(&mut linked_text);
