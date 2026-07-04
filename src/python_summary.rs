@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic)]
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::process::Command;

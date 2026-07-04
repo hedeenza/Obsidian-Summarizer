@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic)]
 pub fn clean_stop_words(linked_text: &mut String) {
     for stop_word in STOP_WORDS {
         let fully_linked_stop = format!("[[{}]]", stop_word);

@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic)]
 use regex::Regex;
 // use std::collections::HashSet;
 
