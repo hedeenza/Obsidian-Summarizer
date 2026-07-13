@@ -1,8 +1,12 @@
 #![warn(clippy::pedantic)]
 use regex::Regex;
+use std::time::Instant;
 // use std::collections::HashSet;
 
 pub fn link_entities_new(text_vector: Vec<&str>) -> String {
+    // Start Benchmarking Timer
+    let program_start = Instant::now();
+
     // Set the capital word regex pattern
     let capital_word = Regex::new(r"^[A-Z]").unwrap();
 
@@ -85,5 +89,8 @@ pub fn link_entities_new(text_vector: Vec<&str>) -> String {
         // Increment Pointer 1 by One
         pointer1_index += 1;
     }
+    // Stop benchmarking Timer
+    let program_duration = program_start.elapsed();
+    println!("Summary Linked in {:.2?}", program_duration);
     linked_text
 }
