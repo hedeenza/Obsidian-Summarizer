@@ -1,7 +1,5 @@
 #![warn(clippy::pedantic)]
 use clap::Parser;
-// use regex::Regex;
-// use std::collections::HashSet;
 use std::env;
 use std::io;
 use std::process::ExitCode;
@@ -31,7 +29,7 @@ struct Cli {
 
     /// Number of sentences in Summary
     #[arg(short, long)]
-    summary_length: u8,
+    summary_length: usize,
 
     /// Group Tag, in CamelCase [default = None]
     #[arg(short, long, default_value = None)]

@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::process::Command;
 
-pub fn run_python_summarizer(input: &String, paths: String, summary_length: u8) -> String {
+pub fn run_python_summarizer(input: &String, paths: String, summary_length: usize) -> String {
     // Read input file
     let input_file = File::open(input).unwrap();
     let input_reader = BufReader::new(input_file);
