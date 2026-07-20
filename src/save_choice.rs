@@ -4,12 +4,12 @@ use std::io::{BufRead, BufReader, Write};
 use std::process::{Command, ExitCode};
 
 pub fn save_choice(
-    decision: String,
-    input_file: String,
-    output_file: String,
-    linked: String,
+    decision: &str,
+    input_file: &str,
+    output_file: &str,
+    linked: &str,
     tag: Option<String>,
-    unlinked: String,
+    unlinked: &str,
 ) -> ExitCode {
     // If the user does want to save, write to file
     if decision.trim() == "y" {
@@ -17,29 +17,28 @@ pub fn save_choice(
         let output_name = format!("{}.md", &output_file);
         let mut output_file = File::create(&output_name).expect("Could not create output file");
         let clean_tag = tag.unwrap_or_default();
-        let formatted_tag = format!("\n\t- {}", clean_tag);
+        let formatted_tag = format!("\n\t- {clean_tag}");
         let _write_header = writeln!(
             output_file,
-            "---\ntitle: \nauthor: \npublication-date: \naccess-date: \nlink: \ntags: {}\nsummary: {}\n---",
-            formatted_tag, unlinked,
+            "---\ntitle: \nauthor: \npublication-date: \naccess-date: \nlink: \ntags: {formatted_tag}\nsummary: {unlinked}\n---",
         );
         // Write Output File Name as Document Title
-        let title = format!("# {}", output_name);
-        let _write_title = writeln!(output_file, "{}", title);
+        let title = format!("# {output_name}");
+        let _write_title = writeln!(output_file, "{title}");
         // Write the Linked Summary
-        let linked_summary = format!("## Summary:\n{}\n", linked);
-        let _write_summary = writeln!(output_file, "{}", linked_summary);
+        let linked_summary = format!("## Summary:\n{linked}\n");
+        let _write_summary = writeln!(output_file, "{linked_summary}");
         // Write the Original Text to the Output
-        let input_file = File::open(&input_file).unwrap();
+        let input_file = File::open(input_file).unwrap();
         let input_reader = BufReader::new(input_file);
         let _write_original_header = writeln!(output_file, "## Original Text:");
         for line in input_reader.lines() {
             match line {
                 Ok(line) => {
-                    let _write_original = writeln!(output_file, "{}", line);
+                    let _write_original = writeln!(output_file, "{line}");
                 }
                 Err(err) => {
-                    println!("[ ERROR ] : {}", err);
+                    println!("[ ERROR ] : {err}");
                 }
             }
         }

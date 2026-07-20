@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::process::Command;
 
-pub fn run_python_summarizer(input: &String, paths: String, summary_length: usize) -> String {
+pub fn run_python_summarizer(input: &String, paths: &str, summary_length: usize) -> String {
     // Read input file
     let input_file = File::open(input).unwrap();
     let input_reader = BufReader::new(input_file);
@@ -16,7 +16,7 @@ pub fn run_python_summarizer(input: &String, paths: String, summary_length: usiz
                 text.push_str(&line);
             }
             Err(err) => {
-                println!("[ ERROR ] : {}", err);
+                println!("[ ERROR ] : {err}");
             }
         }
     }
@@ -24,7 +24,7 @@ pub fn run_python_summarizer(input: &String, paths: String, summary_length: usiz
     // Read ~/.obsidian_summarizer_paths.env
     let mut venv_path = String::new();
     let mut script_path = String::new();
-    let paths_file = File::open(&paths);
+    let paths_file = File::open(paths);
     match paths_file {
         Ok(file) => {
             let paths_reader = BufReader::new(file);
@@ -38,7 +38,7 @@ pub fn run_python_summarizer(input: &String, paths: String, summary_length: usiz
                         }
                     }
                     Err(err) => {
-                        println!("[ ERROR ] : {}", err);
+                        println!("[ ERROR ] : {err}");
                     }
                 }
             }
@@ -79,7 +79,7 @@ pub fn run_python_summarizer(input: &String, paths: String, summary_length: usiz
                 summary.push_str(&line);
             }
             Err(err) => {
-                println!("[ ERROR ] : {}", err);
+                println!("[ ERROR ] : {err}");
             }
         }
     }

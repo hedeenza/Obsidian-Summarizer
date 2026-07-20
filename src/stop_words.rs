@@ -1,11 +1,11 @@
 #![warn(clippy::pedantic)]
 pub fn clean_stop_words(linked_text: &mut String) {
     for stop_word in STOP_WORDS {
-        let fully_linked_stop = format!("[[{}]]", stop_word);
-        let initial_linked_stop = format!("[[{} ", stop_word);
-        let initial_replacement = format!("{} [[", stop_word);
-        let final_linked_stop = format!(" {}]]", stop_word);
-        let final_replacement = format!("]] {}", stop_word);
+        let fully_linked_stop = format!("[[{stop_word}]]");
+        let initial_linked_stop = format!("[[{stop_word} ");
+        let initial_replacement = format!("{stop_word} [[");
+        let final_linked_stop = format!(" {stop_word}]]");
+        let final_replacement = format!("]] {stop_word}");
         let full_text = linked_text.replace(&fully_linked_stop, stop_word);
         let initial_text = full_text.replace(&initial_linked_stop, &initial_replacement);
         let cleaned_text = initial_text.replace(&final_linked_stop, &final_replacement);

@@ -55,20 +55,20 @@ fn main() -> ExitCode {
     let paths_env = home_directory + "/.obsidian_summarizer_paths.env";
 
     // Run the Python Summarizer script
-    let summary = run_python_summarizer(&args.input, paths_env, args.summary_length);
+    let summary = run_python_summarizer(&args.input, &paths_env, args.summary_length);
 
     // Split text on white space and collect into a vector
-    let text_vec: Vec<&str> = summary.split(" ").collect();
+    let text_vec: Vec<&str> = summary.split(' ').collect();
 
     // Create an empty string to contain the "linked" text.
     // Wrap entities in Obsidian-style Links
-    let mut linked_text = link_entities_new(text_vec);
+    let mut linked_text = link_entities_new(&text_vec);
 
     // Clean out the "stop words"
     clean_stop_words(&mut linked_text);
 
     // Print Preview of the Linked Summary
-    println!("Summary:\n{}\n", linked_text);
+    println!("Summary:\n{linked_text}\n");
 
     // Ask if User wants to save output to file
     let mut decision = String::new();
@@ -79,11 +79,11 @@ fn main() -> ExitCode {
 
     // Handle Save Deicision
     save_choice(
-        decision,
-        args.input,
-        args.output,
-        linked_text,
+        &decision,
+        &args.input,
+        &args.output,
+        &linked_text,
         args.group_tag,
-        summary,
+        &summary,
     )
 }

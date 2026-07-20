@@ -3,7 +3,7 @@ use regex::Regex;
 use std::time::Instant;
 // use std::collections::HashSet;
 
-pub fn link_entities_new(text_vector: Vec<&str>) -> String {
+pub fn link_entities_new(text_vector: &[&str]) -> String {
     // Start Benchmarking Timer
     let program_start = Instant::now();
 
@@ -38,7 +38,7 @@ pub fn link_entities_new(text_vector: Vec<&str>) -> String {
                 {
                     // Push each line between Pointer 1 and Pointer 2 to a Vector
                     for word in &text_vector[pointer1_index..pointer2_index] {
-                        let formatted = format!("{} ", word);
+                        let formatted = format!("{word} ");
                         entity.push_str(&formatted);
                     }
 
@@ -49,20 +49,20 @@ pub fn link_entities_new(text_vector: Vec<&str>) -> String {
                     };
 
                     // Manipulate the string to account for final commas, periods, etc.
-                    if entity.ends_with(".") {
-                        let stripped_entity = entity.replace(".", "");
-                        let linked_entity = format!("[[{}]].", stripped_entity);
+                    if entity.ends_with('.') {
+                        let stripped_entity = entity.replace('.', "");
+                        let linked_entity = format!("[[{stripped_entity}]].");
                         linked_text.push_str(&(linked_entity + " "));
-                    } else if entity.ends_with(",") {
-                        let stripped_entity = entity.replace(",", "");
-                        let linked_entity = format!("[[{}]],", stripped_entity);
+                    } else if entity.ends_with(',') {
+                        let stripped_entity = entity.replace(',', "");
+                        let linked_entity = format!("[[{stripped_entity}]],");
                         linked_text.push_str(&(linked_entity + " "));
                     } else if entity.ends_with("'s") {
                         let stripped_entity = entity.replace("'s", "");
-                        let linked_entity = format!("[[{}]]'s", stripped_entity);
+                        let linked_entity = format!("[[{stripped_entity}]]'s");
                         linked_text.push_str(&(linked_entity + " "));
                     } else {
-                        let linked_entity = format!("[[{}]]", entity);
+                        let linked_entity = format!("[[{entity}]]");
                         linked_text.push_str(&(linked_entity + " "));
                     }
 
@@ -70,7 +70,7 @@ pub fn link_entities_new(text_vector: Vec<&str>) -> String {
                     let strip_characters = vec![".", ",", "'s"];
                     for character in strip_characters {
                         let variant = entity.replace(character, "");
-                        previously_linked.push(variant)
+                        previously_linked.push(variant);
                     }
 
                     // Move Pointer 1 up to Pointer 2
@@ -91,6 +91,6 @@ pub fn link_entities_new(text_vector: Vec<&str>) -> String {
     }
     // Stop benchmarking Timer
     let program_duration = program_start.elapsed();
-    println!("Summary Linked in {:.2?}", program_duration);
+    println!("Summary Linked in {program_duration:.2?}");
     linked_text
 }
