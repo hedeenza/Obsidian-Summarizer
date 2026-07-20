@@ -40,14 +40,16 @@ Place the `.obsidian_summarizer_paths.env` file in your home directory, and edit
 `$ ./obsidian-summarizer --input <INPUT> --output <OUTPUT> --summary-length <SUMMARY_LENGTH>`
 
 Options:
-- -i, --input <INPUT>                    Input text file to summarize
-- -o, --output <OUTPUT>                  Output file name
-- -s, --summary-length <SUMMARY_LENGTH>  Number of sentences in Summary
-- -h, --help                             Print help
-- -V, --version                          Print version
+- `-i, --input <INPUT>`                    Input text file to summarize
+- `-o, --output <OUTPUT>`                  Output file name
+- `-s, --summary-length <SUMMARY_LENGTH>`  Number of sentences in Summary
+- `-h, --help`                             Print help
+- `-g, --group-tag <GROUP_TAG>`            Group Tag, in CamelCase [default = None]
+- `-V, --version`                          Print version
 
 - Ensure the program has executable permissions.
 - Experiment with different summary lengths before saving to a file.
+- Group tags allow Obsidian to know that notes with the same tag are connected. By adding the same group tag to each file in a set, a Bases view can be created that allows the summaries for each note in the group to be viewed on one continuous feed. 
 
 ## Building from Source
 Navigate to the project root directory.
@@ -72,5 +74,5 @@ alias osm="obsidian-summarizer"
 - Counts the number of sentences (ending in periods, question marks, or exclamation points) in a file.
 - May be helpful in determining how long the <SUMMARY_LENGTH> should be.
 
-## License
-This program is distributed under the terms of a GNU GPLv3 license. See LICENSE.md for details.
+## Known Issues
+- Errors in named entity parsing and linking function version 2 where some stop words and entities are repeatedly linked.
