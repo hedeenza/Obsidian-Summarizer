@@ -59,7 +59,7 @@ pub fn link_entities_new(mut text_vector: Vec<&str>) -> String {
                     previously_linked.insert(entity.to_string());
 
                     // Manipulate the string to account for final commas, periods, etc.
-                    if entity.ends_with('.') {
+                    if entity.find('.') == Some(entity.len() - 1) {
                         let stripped_entity = entity.replace('.', "");
                         let linked_entity = format!("[[{stripped_entity}]].");
                         linked_text.push_str(&(linked_entity + " "));
@@ -112,10 +112,18 @@ mod tests {
     use super::*;
 
     #[test]
-    fn linking_test() {
+    fn do_not_link_variants() {
         let input = String::from("Taiwan ; Taiwan, ; Taiwan.");
         let vector: Vec<&str> = input.split(' ').collect();
         let linked_input = link_entities_new(vector);
         assert_eq!("[[Taiwan]] ; Taiwan, ; Taiwan.", linked_input);
+    }
+
+    #[test]
+    fn do_not_remove_periods_from_acronyms() {
+        let input = String::from("N.A.T.O. and NATO");
+        let vector: Vec<&str> = input.split(' ').collect();
+        let linked_input = link_entities_new(vector);
+        assert_eq!("[[N.A.T.O.]] and NATO", linked_input);
     }
 }
