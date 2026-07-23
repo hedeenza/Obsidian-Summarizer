@@ -1,7 +1,7 @@
+#![warn(clippy::pedantic)]
 use std::collections::HashSet;
 
-pub fn second_cleaning_pass(linked_text: &mut String) -> String {
-
+pub fn second_cleaning_pass(linked_text: &mut str) -> String {
     let mut previously_okay: HashSet<String> = HashSet::new();
 
     let text_vector: Vec<&str> = linked_text.split(' ').collect();
@@ -9,7 +9,7 @@ pub fn second_cleaning_pass(linked_text: &mut String) -> String {
     let mut cleaned_text = String::new();
 
     for word in text_vector {
-        let unlinked = unlink_entity(word.to_string());
+        let unlinked = unlink_entity(word);
         let sliced_period = unlinked.replace('.', "");
         let sliced_comma = unlinked.replace(',', "");
         let relinked_period = format!("[[{sliced_period}]].");
@@ -17,40 +17,45 @@ pub fn second_cleaning_pass(linked_text: &mut String) -> String {
 
         // Period inside the link, period is not part of an acronym
         if word.ends_with(".]]") && word.find('.') == Some(word.len() - 3) {
-            if previously_okay.contains(&sliced_period) || previously_okay.contains(&relinked_period) {
-                cleaned_text.push_str(&(unlinked.to_owned() + " "));
+            if previously_okay.contains(&sliced_period)
+                || previously_okay.contains(&relinked_period)
+            {
+                cleaned_text.push_str(&(unlinked.clone() + " "));
             } else {
-                cleaned_text.push_str(&(relinked_period.to_owned() + " "));
+                cleaned_text.push_str(&(relinked_period.clone() + " "));
             }
             // Comma inside the link
         } else if word.ends_with(",]]") {
-            if previously_okay.contains(&sliced_comma) || previously_okay.contains(&relinked_comma) {
-                cleaned_text.push_str(&(unlinked.to_owned() + " "));
+            if previously_okay.contains(&sliced_comma) || previously_okay.contains(&relinked_comma)
+            {
+                cleaned_text.push_str(&(unlinked.clone() + " "));
             } else {
-                cleaned_text.push_str(&(relinked_comma.to_owned() + " "));
+                cleaned_text.push_str(&(relinked_comma.clone() + " "));
             }
         // Otherwise
         } else {
-            if previously_okay.contains(&sliced_period) || previously_okay.contains(&relinked_period) || 
-                previously_okay.contains(&sliced_comma) || previously_okay.contains(&relinked_comma) {
-                cleaned_text.push_str(&(unlinked.to_owned() + " "));
+            if previously_okay.contains(&sliced_period)
+                || previously_okay.contains(&relinked_period)
+                || previously_okay.contains(&sliced_comma)
+                || previously_okay.contains(&relinked_comma)
+            {
+                cleaned_text.push_str(&(unlinked.clone() + " "));
             } else {
                 cleaned_text.push_str(&(word.to_owned() + " "));
             }
         }
 
         previously_okay.insert(word.to_string());
-        previously_okay.insert(unlinked.to_string());
-        previously_okay.insert(sliced_period.to_string());
-        previously_okay.insert(sliced_comma.to_string());
-        previously_okay.insert(relinked_period.to_string());
-        previously_okay.insert(relinked_comma.to_string());
-
+        previously_okay.insert(unlinked.clone());
+        previously_okay.insert(sliced_period.clone());
+        previously_okay.insert(sliced_comma.clone());
+        previously_okay.insert(relinked_period.clone());
+        previously_okay.insert(relinked_comma.clone());
     }
     cleaned_text.trim().to_string()
 }
 
-fn unlink_entity(linked_entity: String) -> String {
+fn unlink_entity(linked_entity: &str) -> String {
     let unlinked;
     // Fully linked
     if linked_entity.starts_with('[') && linked_entity.ends_with(']') {
@@ -63,7 +68,7 @@ fn unlink_entity(linked_entity: String) -> String {
         unlinked = &linked_entity[0..linked_entity.len() - 2];
     // Unlinked
     } else {
-        unlinked = &linked_entity;
+        unlinked = linked_entity;
     }
 
     unlinked.to_string()
@@ -130,5 +135,4 @@ mod tests {
         let output = second_cleaning_pass(&mut input);
         assert_eq!("[[China]] China, China,", output);
     }
-
 }

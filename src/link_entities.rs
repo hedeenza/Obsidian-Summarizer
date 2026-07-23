@@ -8,7 +8,7 @@ pub fn link_entities_new(mut text_vector: Vec<&str>) -> String {
     // let program_start = Instant::now();
     //
     text_vector.push("");
-    
+
     // Set the capital word regex pattern
     let capital_word = Regex::new(r"^[A-Z]").unwrap();
 
@@ -53,7 +53,7 @@ pub fn link_entities_new(mut text_vector: Vec<&str>) -> String {
                     if previously_linked.contains(entity) {
                         linked_text.push_str(&(entity.to_owned() + " "));
                         pointer1_index = pointer2_index - 1;
-                        break
+                        break;
                     }
 
                     previously_linked.insert(entity.to_string());
