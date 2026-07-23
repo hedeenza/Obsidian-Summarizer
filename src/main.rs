@@ -16,6 +16,9 @@ use crate::link_entities::link_entities_new;
 mod save_choice;
 use crate::save_choice::save_choice;
 
+mod second_cleaning;
+use crate::second_cleaning::second_cleaning_pass;
+
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Cli {
@@ -65,7 +68,10 @@ fn main() -> ExitCode {
     let mut linked_text = link_entities_new(text_vec);
 
     // Clean out the "stop words"
-    let clean_linked_text = clean_stop_words(&mut linked_text);
+    let mut stop_words_removed = clean_stop_words(&mut linked_text);
+
+    // Second cleaning pass to remove errors left by cleaning stop words
+    let clean_linked_text = second_cleaning_pass(&mut stop_words_removed);
 
     // Print Preview of the Linked Summary
     println!("Summary:\n{clean_linked_text}\n");
