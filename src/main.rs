@@ -62,7 +62,7 @@ fn main() -> ExitCode {
 
     // Create an empty string to contain the "linked" text.
     // Wrap entities in Obsidian-style Links
-    let mut linked_text = link_entities_new(&text_vec);
+    let mut linked_text = link_entities_new(text_vec);
 
     // Clean out the "stop words"
     let clean_linked_text = clean_stop_words(&mut linked_text);
