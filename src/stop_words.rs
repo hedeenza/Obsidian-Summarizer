@@ -1,5 +1,5 @@
 #![warn(clippy::pedantic)]
-pub fn clean_stop_words(linked_text: &mut String) {
+pub fn clean_stop_words(linked_text: &mut String) -> String {
     for stop_word in STOP_WORDS {
         let fully_linked_stop = format!("[[{stop_word}]]");
         let initial_linked_stop = format!("[[{stop_word} ");
@@ -9,7 +9,34 @@ pub fn clean_stop_words(linked_text: &mut String) {
         let full_text = linked_text.replace(&fully_linked_stop, stop_word);
         let initial_text = full_text.replace(&initial_linked_stop, &initial_replacement);
         let cleaned_text = initial_text.replace(&final_linked_stop, &final_replacement);
-        *linked_text = cleaned_text;
+        *linked_text = cleaned_text
+    }
+    linked_text.to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn clean_fully_linked_stop() {
+        let mut input = String::from("[[Able]]");
+        let cleaned_input = clean_stop_words(&mut input);
+        assert_eq!("Able", cleaned_input);
+    }
+
+    #[test]
+    fn clean_initially_linked_stop() {
+        let mut input = String::from("[[Able ");
+        let cleaned_input = clean_stop_words(&mut input);
+        assert_eq!("Able [[", cleaned_input);
+    }
+    
+    #[test]
+    fn clean_finally_linked_stop() {
+        let mut input = String::from(" Able]]");
+        let cleaned_input = clean_stop_words(&mut input);
+        assert_eq!("]] Able", cleaned_input);
     }
 }
 

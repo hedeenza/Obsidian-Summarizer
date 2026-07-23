@@ -65,10 +65,10 @@ fn main() -> ExitCode {
     let mut linked_text = link_entities_new(&text_vec);
 
     // Clean out the "stop words"
-    clean_stop_words(&mut linked_text);
+    let clean_linked_text = clean_stop_words(&mut linked_text);
 
     // Print Preview of the Linked Summary
-    println!("Summary:\n{linked_text}\n");
+    println!("Summary:\n{clean_linked_text}\n");
 
     // Ask if User wants to save output to file
     let mut decision = String::new();
@@ -82,7 +82,7 @@ fn main() -> ExitCode {
         &decision,
         &args.input,
         &args.output,
-        &linked_text,
+        &clean_linked_text,
         args.group_tag,
         &summary,
     )
