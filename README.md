@@ -76,3 +76,4 @@ alias osm="obsidian-summarizer"
 
 ## Known Issues
 - Errors in named entity parsing and linking function version 2 where some stop words and entities are repeatedly linked.
+- Entity detection "crosses sentences" in error, treating a sentence final entity and a sentence initial entity as one entity.
